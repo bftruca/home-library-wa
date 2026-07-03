@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="HomeLibrary.Api/HomeLibrary.Api.csproj" />
+  <Project Path="HomeLibrary.Shared/HomeLibrary.Shared.csproj" Id="fc9bcefb-9b01-4412-a250-6fc0f75f3bd7" />
+  <Project Path="HomeLibrary.Tests/HomeLibrary.Tests.csproj" Id="8f2591b7-d60c-4748-904d-7ccd016a4d8a" />
+  <Project Path="HomeLibrary.Worker/HomeLibrary.Worker.csproj" Id="14e15e83-396a-40c2-9835-7634151626b2" />
+</Solution>
