@@ -2,6 +2,7 @@
 using HomeLibrary.Api.Services.Interfaces;
 using HomeLibrary.Shared.RabbitMq.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using RabbitMQ.Client.Exceptions;
 
 namespace HomeLibrary.Api.Controllers;
 
@@ -20,9 +21,11 @@ public sealed class ImportsController : ControllerBase
     [ProducesResponseType<ImportResponse>(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status415UnsupportedMediaType)]
+    [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> ImportAsync(
-        IFormFile? file,
-        CancellationToken cancellationToken)
+    IFormFile? file,
+    CancellationToken cancellationToken)
     {
         if (file is null)
         {
@@ -54,6 +57,18 @@ public sealed class ImportsController : ControllerBase
         catch (InvalidDataException ex)
         {
             return BadRequest(ex.Message);
+        }
+        catch (BrokerUnreachableException)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                "RabbitMQ is currently unavailable.");
+        }
+        catch (Exception)
+        {
+            return StatusCode(
+                StatusCodes.Status500InternalServerError,
+                "An unexpected error occurred while importing the file.");
         }
     }
 }
