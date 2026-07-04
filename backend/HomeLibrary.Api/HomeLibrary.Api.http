@@ -1,6 +1,12 @@
 @HomeLibrary.Api_HostAddress = http://localhost:5163
 
-GET {{HomeLibrary.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+### Import CSV
+
+POST {{HomeLibrary.Api_HostAddress}}/api/imports
 
 ###
+
+### Get Books
+
+GET {{HomeLibrary.Api_HostAddress}}/api/books
+Accept: application/json

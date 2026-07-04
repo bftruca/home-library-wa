@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace HomeLibrary.Shared.Messages
+﻿namespace HomeLibrary.Shared.Messages
 {
-    internal class BookImportMessage
+    public sealed record BookImportMessage
     {
+        public required string Name { get; init; }
+
+        public required string Author { get; init; }
+
+        public required string Genre { get; init; }
     }
 }
