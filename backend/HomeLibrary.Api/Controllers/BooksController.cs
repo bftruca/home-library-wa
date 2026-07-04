@@ -17,11 +17,28 @@ public sealed class BooksController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<BookResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<IReadOnlyList<BookResponse>>> GetAsync(
         CancellationToken cancellationToken)
     {
-        var books = await _bookService.GetAllAsync(cancellationToken);
+        try
+        {
+            var books = await _bookService.GetAllAsync(cancellationToken);
 
-        return Ok(books);
+            return Ok(books);
+        }
+        catch (Npgsql.NpgsqlException)
+        {
+            return StatusCode(
+                StatusCodes.Status503ServiceUnavailable,
+                "Database is currently unavailable.");
+        }
+        catch (Exception)
+        {
+            return StatusCode(
+                StatusCodes.Status500InternalServerError,
+                "An unexpected error occurred.");
+        }
     }
 }

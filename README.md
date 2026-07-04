@@ -2,7 +2,7 @@
 
 A simple book import application built with **.NET 10**, **Angular**, **PostgreSQL**, **RabbitMQ**, and **Docker Compose**.
 
-The application follows an asynchronous producer/consumer architecture where the API parses uploaded CSV files and publishes one message per book to RabbitMQ. A dedicated background worker consumes these messages and persists the data into PostgreSQL, keeping the API responsive and allowing imports to be processed asynchronously.
+The application follows an asynchronous producer/consumer architecture where the API parses uploaded CSV files and publishes one message per book to RabbitMQ. A dedicated background worker consumes these messages and persists them into PostgreSQL, allowing imports to be processed asynchronously while keeping the API responsive.
 
 ---
 
@@ -31,7 +31,7 @@ The application follows an asynchronous producer/consumer architecture where the
 │       └── system-design.png
 │
 ├── docker-compose.yml
-├── .env
+├── .env.example
 └── README.md
 ```
 
@@ -41,7 +41,7 @@ The application follows an asynchronous producer/consumer architecture where the
 |----------|-------------|
 | **HomeLibrary.Api** | REST API responsible for parsing CSV files, publishing messages to RabbitMQ and exposing book endpoints. |
 | **HomeLibrary.Worker** | Background worker responsible for consuming RabbitMQ messages and persisting books into PostgreSQL. |
-| **HomeLibrary.Shared** | Shared entities, Entity Framework Core context, DTOs, messaging contracts and common models. |
+| **HomeLibrary.Shared** | Shared entities, Entity Framework Core context, repositories, messaging contracts and common models. |
 | **HomeLibrary.Tests** | Unit tests covering the application's business logic. |
 
 ---
@@ -56,7 +56,27 @@ Before running the application, make sure the following software is installed:
 
 ---
 
-# Local Development
+## Configuration
+
+Create a local `.env` file from the provided example.
+
+### Windows PowerShell
+
+```powershell
+Copy-Item .env.example .env
+```
+
+### Linux / macOS
+
+```bash
+cp .env.example .env
+```
+
+The default values provided in `.env.example` are suitable for local development.
+
+---
+
+## Running with Docker
 
 All Docker commands should be executed from the repository root.
 
@@ -64,38 +84,66 @@ All Docker commands should be executed from the repository root.
 home-library-wa/
 ```
 
-Start PostgreSQL and RabbitMQ:
+Build and start the complete application:
 
 ```bash
-docker compose up -d
+docker compose up -d --build
 ```
 
-Verify running containers:
-
-```bash
-docker ps
-```
-
-Stop the infrastructure:
+Stop all containers:
 
 ```bash
 docker compose down
 ```
 
-Rebuild the infrastructure:
+Display running containers:
 
 ```bash
-docker compose up -d --build
+docker compose ps
+```
+
+This starts:
+
+- PostgreSQL
+- RabbitMQ
+- ASP.NET Core API
+- Background Worker
+
+---
+
+## Running Locally
+
+### Backend
+
+Open the solution:
+
+```text
+backend/HomeLibrary.slnx
+```
+
+Run the following startup projects:
+
+- HomeLibrary.Api
+- HomeLibrary.Worker
+
+### Frontend
+
+```bash
+cd frontend/home-library-ui
+
+npm install
+
+ng serve
 ```
 
 ---
 
 ## Entity Framework
 
-All Entity Framework commands should be executed from:
+Execute all Entity Framework commands from:
 
 ```text
-home-library-wa/backend
+backend/
 ```
 
 ### Create a migration
@@ -128,60 +176,27 @@ dotnet test
 
 ---
 
-## Running the Application
+## Available Services
 
-### Backend
-
-Open the solution:
-
-```text
-backend/HomeLibrary.slnx
-```
-
-Run the following startup projects:
-
-- HomeLibrary.Api
-- HomeLibrary.Worker
-
----
-
-### Frontend
-
-```bash
-cd frontend/home-library-ui
-
-npm install
-
-ng serve
-```
-
----
-
-## Docker Deployment
-
-Once the Dockerfiles are added for the API, Worker and Angular application, the complete application can be started using:
-
-```bash
-docker compose up -d --build
-```
-
-This will start:
-
-- PostgreSQL
-- RabbitMQ
-- ASP.NET Core API
-- Background Worker
-- Angular application
-
----
-
-## Default Services
+### Docker
 
 | Service | URL |
 |----------|-----|
-| Swagger | https://localhost:5001/swagger |
+| API | http://localhost:8080 |
 | RabbitMQ Management | http://localhost:15672 |
 | PostgreSQL | localhost:5432 |
+
+### Local Development
+
+When running the API locally, the OpenAPI specification is available at:
+
+```text
+https://localhost:7046/openapi/v1.json
+```
+
+---
+
+## Default Credentials
 
 ### RabbitMQ
 
