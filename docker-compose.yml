@@ -37,25 +37,42 @@ services:
   # YOUR SERVICES — uncomment and adjust
   # -------------------------------------
 
-  # api:
-  #   build:
-  #     context: ./src/Api
-  #   environment:
-  #     ConnectionStrings__Library: "Host=postgres;Port=5432;Database=${POSTGRES_DB:-library};Username=${POSTGRES_USER:-library};Password=${POSTGRES_PASSWORD:-library}"
-  #     RabbitMq__HostName: rabbitmq
-  #     RabbitMq__UserName: ${RABBITMQ_USER:-guest}
-  #     RabbitMq__Password: ${RABBITMQ_PASSWORD:-guest}
-  #   ports:
-  #     - "8080:8080"
-
-  # worker:
-  #   build:
-  #     context: ./src/Worker
-  #   environment:
-  #     ConnectionStrings__Library: "Host=postgres;Port=5432;Database=${POSTGRES_DB:-library};Username=${POSTGRES_USER:-library};Password=${POSTGRES_PASSWORD:-library}"
-  #     RabbitMq__HostName: rabbitmq
-  #     RabbitMq__UserName: ${RABBITMQ_USER:-guest}
-  #     RabbitMq__Password: ${RABBITMQ_PASSWORD:-guest}
+  api:
+    build:
+      context: ./backend
+      dockerfile: HomeLibrary.Api/Dockerfile
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=${POSTGRES_DB:-library};Username=${POSTGRES_USER:-library};Password=${POSTGRES_PASSWORD:-library}"
+      RabbitMq__HostName: rabbitmq
+      RabbitMq__Port: 5672
+      RabbitMq__UserName: ${RABBITMQ_USER:-guest}
+      RabbitMq__Password: ${RABBITMQ_PASSWORD:-guest}
+      RabbitMq__QueueName: book-imports
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+  
+  worker:
+    build:
+      context: ./backend
+      dockerfile: HomeLibrary.Worker/Dockerfile
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=${POSTGRES_DB:-library};Username=${POSTGRES_USER:-library};Password=${POSTGRES_PASSWORD:-library}"
+      RabbitMq__HostName: rabbitmq
+      RabbitMq__Port: 5672
+      RabbitMq__UserName: ${RABBITMQ_USER:-guest}
+      RabbitMq__Password: ${RABBITMQ_PASSWORD:-guest}
+      RabbitMq__QueueName: book-imports
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
   # web:
   #   build:

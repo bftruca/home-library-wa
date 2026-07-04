@@ -17,6 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HomeLibrary.Api\HomeLibrary.Api.csproj" />
+    <ProjectReference Include="..\HomeLibrary.Shared\HomeLibrary.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
 

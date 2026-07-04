@@ -1,17 +1,25 @@
+using HomeLibrary.Shared.RabbitMq.Interfaces;
+
 namespace HomeLibrary.Worker
 {
-    public class Worker(ILogger<Worker> logger) : BackgroundService
+    public sealed class Worker : BackgroundService
     {
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        private readonly ILogger<Worker> _logger;
+        private readonly IRabbitMqConsumer _consumer;
+
+        public Worker(
+            ILogger<Worker> logger,
+            IRabbitMqConsumer consumer)
         {
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                if (logger.IsEnabled(LogLevel.Information))
-                {
-                    logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                }
-                await Task.Delay(1000, stoppingToken);
-            }
+            _logger = logger;
+            _consumer = consumer;
+        }
+
+        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            _logger.LogInformation("Worker started.");
+
+            return _consumer.StartAsync(stoppingToken);
         }
     }
 }

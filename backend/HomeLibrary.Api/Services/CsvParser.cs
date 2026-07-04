@@ -40,6 +40,11 @@ namespace HomeLibrary.Api.Services
                     continue;
                 }
 
+                if (columns.Any(column => string.IsNullOrWhiteSpace(column)))
+                {
+                    continue;
+                }
+
                 books.Add(new BookImportMessage
                 {
                     Name = columns[0].Trim(),
