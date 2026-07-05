@@ -1,8 +1,11 @@
+````markdown
 # Home Library
 
 A simple book import application built with **.NET 10**, **Angular**, **PostgreSQL**, **RabbitMQ**, and **Docker Compose**.
 
-The application follows an asynchronous producer/consumer architecture where the API parses uploaded CSV files and publishes one message per book to RabbitMQ. A dedicated background worker consumes these messages and persists them into PostgreSQL, allowing imports to be processed asynchronously while keeping the API responsive.
+The application follows an asynchronous producer-consumer architecture. The API parses uploaded CSV files and publishes one message per book to RabbitMQ. A dedicated background worker consumes these messages and persists the books in PostgreSQL.
+
+This allows imports to be processed asynchronously while keeping the API responsive.
 
 ---
 
@@ -39,19 +42,23 @@ The application follows an asynchronous producer/consumer architecture where the
 
 | Project | Description |
 |----------|-------------|
-| **HomeLibrary.Api** | REST API responsible for parsing CSV files, publishing messages to RabbitMQ and exposing book endpoints. |
-| **HomeLibrary.Worker** | Background worker responsible for consuming RabbitMQ messages and persisting books into PostgreSQL. |
-| **HomeLibrary.Shared** | Shared entities, Entity Framework Core context, repositories, messaging contracts and common models. |
+| **HomeLibrary.Api** | REST API responsible for parsing CSV files, publishing messages to RabbitMQ, and exposing book endpoints. |
+| **HomeLibrary.Worker** | Background worker responsible for consuming RabbitMQ messages and persisting books in PostgreSQL. |
+| **HomeLibrary.Shared** | Shared entities, Entity Framework Core context, repositories, messaging contracts, and common models. |
 | **HomeLibrary.Tests** | Unit tests covering the application's business logic. |
 
 ---
 
 ## Prerequisites
 
-Before running the application, make sure the following software is installed:
+### Running the project locally
 
 - .NET 10 SDK
 - Node.js
+- Docker Desktop
+
+### Running the entire project with Docker
+
 - Docker Desktop
 
 ---
@@ -78,7 +85,7 @@ The default values provided in `.env.example` are suitable for local development
 
 ## Running with Docker
 
-All Docker commands should be executed from the repository root.
+All Docker commands should be executed from the repository root:
 
 ```text
 home-library-wa/
@@ -96,10 +103,16 @@ Stop all containers:
 docker compose down
 ```
 
-Display running containers:
+List running containers:
 
 ```bash
 docker compose ps
+```
+
+View container logs:
+
+```bash
+docker compose logs -f
 ```
 
 This starts:
@@ -108,10 +121,19 @@ This starts:
 - RabbitMQ
 - ASP.NET Core API
 - Background Worker
+- Angular frontend
 
 ---
 
 ## Running Locally
+
+### Infrastructure
+
+Start PostgreSQL and RabbitMQ:
+
+```bash
+docker compose up -d postgres rabbitmq
+```
 
 ### Backend
 
@@ -123,27 +145,27 @@ backend/HomeLibrary.slnx
 
 Run the following startup projects:
 
-- HomeLibrary.Api
-- HomeLibrary.Worker
+- `HomeLibrary.Api`
+- `HomeLibrary.Worker`
 
 ### Frontend
 
+From the repository root, run:
+
 ```bash
 cd frontend/home-library-ui
-
 npm install
-
-ng serve
+npm start
 ```
 
 ---
 
 ## Entity Framework
 
-Execute all Entity Framework commands from:
+Execute all Entity Framework commands from the `backend` folder:
 
-```text
-backend/
+```bash
+cd backend
 ```
 
 ### Create a migration
@@ -195,6 +217,12 @@ When running the API locally, the OpenAPI specification is available at:
 https://localhost:7046/openapi/v1.json
 ```
 
+The Angular frontend is available at:
+
+```text
+http://localhost:4200
+```
+
 ---
 
 ## Default Credentials
@@ -226,8 +254,9 @@ Password=library
 - PostgreSQL
 - RabbitMQ
 - Angular
-- Tailwind CSS
+- Tailwind CSS (configured)
+- Vanilla CSS
 - Docker Compose
 - xUnit
 - Moq
-- FluentAssertions
+````
