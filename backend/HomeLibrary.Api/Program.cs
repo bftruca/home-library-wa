@@ -31,6 +31,19 @@ namespace HomeLibrary.Api
             builder.Services.AddScoped<IImportService, ImportService>();
             builder.Services.AddScoped<IBookService, BookService>();
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AngularDev", policy =>
+                {
+                    policy
+                        .WithOrigins(
+                            "http://localhost:4200",
+                            "http://localhost")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
@@ -44,6 +57,8 @@ namespace HomeLibrary.Api
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors("AngularDev");
 
             app.UseAuthorization();
 

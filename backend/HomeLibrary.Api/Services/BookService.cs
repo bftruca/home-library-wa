@@ -20,6 +20,7 @@ namespace HomeLibrary.Api.Services
 
             return books
                 .Select(book => new BookResponse(
+                    book.Id,
                     book.Name,
                     book.Author,
                     book.Genre,

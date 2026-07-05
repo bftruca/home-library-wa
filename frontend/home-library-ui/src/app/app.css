@@ -1,0 +1,64 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  padding: 24px;
+  box-sizing: border-box;
+  background-color: #f5f7fa;
+}
+
+.library-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 32%) minmax(0, 68%);
+  gap: 20px;
+
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+app-file-upload,
+.books-panel {
+  min-width: 0;
+}
+
+.books-panel {
+  padding: 18px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background-color: #ffffff;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.panel-header p {
+  margin: 4px 0 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.loading-message {
+  margin: 30px 0;
+  color: #64748b;
+  font-size: 14px;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  :host {
+    padding: 16px;
+  }
+
+  .library-layout {
+    grid-template-columns: 1fr;
+  }
+}

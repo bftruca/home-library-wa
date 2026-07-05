@@ -1,0 +1,52 @@
+<div class="table-container">
+  @if (books().length === 0) {
+    <div class="empty-state">
+      <p>No books imported yet.</p>
+    </div>
+  } @else {
+    <table class="books-table">
+      <thead>
+        <tr>
+          <th class="name-column">Name</th>
+          <th class="author-column">Author</th>
+          <th class="genre-column">Genre</th>
+          <th class="date-column">Import Date</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (book of books(); track book.id) {
+          <tr>
+            <td>
+              <span
+                class="truncate"
+                [title]="book.name">
+                {{ book.name }}
+              </span>
+            </td>
+
+            <td>
+              <span
+                class="truncate"
+                [title]="book.author">
+                {{ book.author }}
+              </span>
+            </td>
+
+            <td>
+              <span
+                class="truncate"
+                [title]="book.genre">
+                {{ book.genre }}
+              </span>
+            </td>
+
+            <td class="date-cell">
+              {{ book.importDate | date:'dd.MM.yyyy HH:mm' }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

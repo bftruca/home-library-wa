@@ -1,0 +1,79 @@
+<section class="upload-panel">
+  <div
+    class="drop-zone"
+    [class.dragging]="isDragging()"
+    (dragenter)="onDragEnter($event)"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onDrop($event)">
+
+    <input
+      #fileInput
+      type="file"
+      accept=".csv,text/csv"
+      hidden
+      (change)="onFileSelected($event)">
+
+    <span class="drop-zone-icon">📚</span>
+
+    <h2>Import books</h2>
+
+    <p>
+      Drag and drop your CSV file here
+    </p>
+
+    <button
+      type="button"
+      [disabled]="isUploading()"
+      (click)="fileInput.click()">
+      Select file
+    </button>
+  </div>
+
+  @if (selectedFile(); as file) {
+    <div class="selected-file">
+      <div class="file-details">
+        <strong [title]="file.name">
+          {{ file.name }}
+        </strong>
+
+        <span>
+          {{ formatFileSize(file.size) }}
+        </span>
+      </div>
+
+      <button
+        type="button"
+        class="remove-button"
+        [disabled]="isUploading()"
+        (click)="removeFile()">
+        ×
+      </button>
+    </div>
+
+    <button
+      type="button"
+      class="import-button"
+      [disabled]="isUploading()"
+      (click)="importFile()">
+
+      @if (isUploading()) {
+        Importing...
+      } @else {
+        Import CSV
+      }
+    </button>
+  }
+
+  @if (successMessage()) {
+    <p class="message success-message">
+      {{ successMessage() }}
+    </p>
+  }
+
+  @if (errorMessage()) {
+    <p class="message error-message">
+      {{ errorMessage() }}
+    </p>
+  }
+</section>
