@@ -1,4 +1,3 @@
-````markdown
 # Home Library
 
 A simple book import application built with **.NET 10**, **Angular**, **PostgreSQL**, **RabbitMQ**, and **Docker Compose**.
@@ -259,4 +258,3 @@ Password=library
 - Docker Compose
 - xUnit
 - Moq
-````
