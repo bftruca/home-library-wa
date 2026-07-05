@@ -1,4 +1,5 @@
 
+using HomeLibrary.Api.Extensions;
 using HomeLibrary.Api.Services;
 using HomeLibrary.Api.Services.Interfaces;
 using HomeLibrary.Shared.Data;
@@ -49,6 +50,8 @@ namespace HomeLibrary.Api
             builder.Services.AddOpenApi();
 
             var app = builder.Build();
+
+            app.ApplyMigrations();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

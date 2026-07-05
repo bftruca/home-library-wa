@@ -74,13 +74,14 @@ services:
       rabbitmq:
         condition: service_healthy
 
-  # web:
-  #   build:
-  #     context: ./src/web         
-  #   ports:
-  #     - "4200:80"
-  #   depends_on:
-  #     - api
+  web:
+    build:
+      context: ./frontend/home-library-ui
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
 
 volumes:
   postgres-data:
