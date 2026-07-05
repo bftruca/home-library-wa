@@ -182,6 +182,7 @@ dotnet test
 
 | Service | URL |
 |----------|-----|
+| Angular UI | http://localhost:4200 |
 | API | http://localhost:8080 |
 | RabbitMQ Management | http://localhost:15672 |
 | PostgreSQL | localhost:5432 |
